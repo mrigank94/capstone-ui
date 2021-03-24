@@ -15,6 +15,7 @@ import Container from '@material-ui/core/Container';
 import axios from 'axios';
 import Copyright from './Copyright';
 import { FormLabel, Radio, RadioGroup } from '@material-ui/core';
+import { toast } from 'react-toastify';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -52,17 +53,19 @@ export default function SignUp(props) {
             return;
         }
 
+        let data = {};
         try {
-            const {data} = await axios.post('http://localhost:3001/api/users', {
+            ({data} = await axios.post('http://localhost:3001/api/users', {
                 name,
                 email,
                 password,
                 persona,
                 contactNumber:  number
-            });
-            props.history.push('/home');
+            }));
+            toast.success(`User Signed Up, ${data.name}`)
+            props.history.push('/login');
         } catch(ex) {
-            console.log(ex.message);
+            toast.error(ex.message);
         } finally {
             setSubmitAction(false);
         }

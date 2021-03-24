@@ -1,32 +1,35 @@
-import React from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import {Link} from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import Copyright from './Copyright';
+import React, { useEffect } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import { Link } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import Copyright from "./Copyright";
+import axios from "axios";
+import { toast } from "react-toastify";
+import authService from './../service/auth.service';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(1),
   },
   submit: {
@@ -34,8 +37,39 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Login() {
+export default function Login(props) {
   const classes = useStyles();
+
+  const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("");
+  const [submitAction, setSubmitAction] = React.useState(false);
+
+  useEffect(() => {
+    async function doAuth() {
+        if(!submitAction)  {
+            return;
+        }
+
+        try {
+            let {data} = await authService.doAuth(email, password);
+            toast.success(`Welcome back, ${data.name}`);
+            props.history.push('/home');
+            window.location.reload();
+        } catch(ex) {
+            toast.error(ex.message);
+        } finally {
+            setSubmitAction(false);
+        }
+    }
+
+    doAuth()
+    
+  }, [submitAction]);
+
+  const submitForm = (event) => {
+    event.preventDefault();
+    setSubmitAction(true);
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -47,7 +81,7 @@ export default function Login() {
         <Typography component="h1" variant="h5">
           Sign in
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -57,6 +91,8 @@ export default function Login() {
             label="Email Address"
             name="email"
             autoComplete="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
             autoFocus
           />
           <TextField
@@ -69,6 +105,8 @@ export default function Login() {
             type="password"
             id="password"
             autoComplete="current-password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -80,12 +118,13 @@ export default function Login() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={submitForm}
           >
             Sign In
           </Button>
           <Grid container>
             <Grid item>
-              <Link to='signup' variant="body2">
+              <Link to="signup" variant="body2">
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
