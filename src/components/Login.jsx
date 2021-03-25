@@ -45,6 +45,12 @@ export default function Login(props) {
   const [submitAction, setSubmitAction] = React.useState(false);
 
   useEffect(() => {
+      if(authService.isLoggedIn()) {
+        props.history.push('/my-courses');
+      }
+  }, []);
+
+  useEffect(() => {
     async function doAuth() {
         if(!submitAction)  {
             return;
@@ -56,7 +62,7 @@ export default function Login(props) {
             props.history.push('/home');
             window.location.reload();
         } catch(ex) {
-            toast.error(ex.message);
+            
         } finally {
             setSubmitAction(false);
         }

@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
+import xhrService from "../service/xhr.service";
 
 const SelectTopic = ({value, onChange}) => {
   const [topics, setTopics] = useState([]);
@@ -8,7 +8,7 @@ const SelectTopic = ({value, onChange}) => {
   useEffect(() => {
     async function getTopics() {
       try {
-        const { data } = await axios.get(
+        const { data } = await xhrService.get(
           "http://localhost:3001/api/courses//topics/all"
         );
         setTopics(data.map((el) => ({ value: el, label: el })));
@@ -20,7 +20,7 @@ const SelectTopic = ({value, onChange}) => {
     getTopics()
   }, []);
 
-  return <Select value={value} onChange={onChange} options={topics} label='Select Topic'/>;
+  return <CreatableSelect value={value} onChange={onChange} options={topics} label='Select Topic'/>;
 };
 
 export default SelectTopic;

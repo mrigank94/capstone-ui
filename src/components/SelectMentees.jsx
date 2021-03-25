@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Select from "react-select";
+import xhrService from "../service/xhr.service";
 
 const SelectMentees = ({value, onChange}) => {
   const [mentees, setMentees] = useState([]);
@@ -8,7 +8,7 @@ const SelectMentees = ({value, onChange}) => {
   useEffect(() => {
     async function getMentees() {
       try {
-        const { data } = await axios.get(
+        const { data } = await xhrService.get(
           "http://localhost:3001/api/mentees"
         );
 

@@ -1,7 +1,5 @@
 import "./../App.css";
 import React, { useEffect, useState } from "react";
-import ClassComponent from "./ClassComponent";
-import FunctionalComponent from "./FunctionalComponent";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
 import Login from "./Login";
@@ -12,21 +10,21 @@ import AddCourseForm from "./AddCourseForm";
 import "react-toastify/dist/ReactToastify.css";
 import CourseDetails from "./CourseDetails";
 import MyCourses from "./MyCourses";
-import authService from "../service/auth.service";
 import ProtectedRoute from "./common/ProtectedRoute";
 
-function App() {
+
+function App(props) {
   return (
     <>
       <ToastContainer />
       <AppBar />
       <Switch>
-        <Route path="/home" component={Home} />
         <Route path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
-        <ProtectedRoute path='/add-course' component={AddCourseForm}/>
-        <Route path="/all-courses" component={CourseDetails} />
-        <Route path="/my-courses" component={MyCourses} />
+        <ProtectedRoute adminOnly={true} path="/add-course" component={AddCourseForm}  />
+        <ProtectedRoute adminOnly={false} path="/course-details/:id" component={CourseDetails}  />
+        <Route path="/all-courses" component={Home} />
+        <ProtectedRoute adminOnly={false} path="/my-courses" component={MyCourses}  />
         <Redirect to="/login" />
       </Switch>
     </>

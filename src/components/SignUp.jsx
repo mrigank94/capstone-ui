@@ -16,6 +16,7 @@ import axios from 'axios';
 import Copyright from './Copyright';
 import { FormLabel, Radio, RadioGroup } from '@material-ui/core';
 import { toast } from 'react-toastify';
+import xhrService from '../service/xhr.service';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -55,7 +56,7 @@ export default function SignUp(props) {
 
         let data = {};
         try {
-            ({data} = await axios.post('http://localhost:3001/api/users', {
+            ({data} = await xhrService.post('http://localhost:3001/api/users', {
                 name,
                 email,
                 password,
