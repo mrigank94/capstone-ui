@@ -44,3 +44,21 @@
   border-radius: 5px;
   margin: 20px;
 }
+
+.book-vehicle-container {
+    background-color: green;
+    padding: 0 10px 0 10px;
+    border-radius: 10px;
+    color: white;
+    width: 15%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.book-vehicle-container:hover {
+  transform: scale(1.05);
+}
+
+

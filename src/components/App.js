@@ -6,11 +6,11 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 import { Route, Redirect, Switch } from "react-router-dom";
 import AppBar from "./AppBar";
-import AddCourseForm from "./AddCourseForm";
+import AddCourseForm from "./AddVehicleForm";
 import "react-toastify/dist/ReactToastify.css";
-import CourseDetails from "./CourseDetails";
 import MyCourses from "./MyCourses";
 import ProtectedRoute from "./common/ProtectedRoute";
+import AddBooking from "./AddBookings";
 
 
 function App(props) {
@@ -21,10 +21,10 @@ function App(props) {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
-        <ProtectedRoute adminOnly={true} path="/add-course" component={AddCourseForm}  />
-        <ProtectedRoute adminOnly={false} path="/course-details/:id" component={CourseDetails}  />
-        <Route path="/all-courses" component={Home} />
-        <ProtectedRoute adminOnly={false} path="/my-courses" component={MyCourses}  />
+        <ProtectedRoute adminOnly={true} path="/add-vehicle" component={AddCourseForm}  />
+        <ProtectedRoute adminOnly={false} path="/add-booking" component={AddBooking}  />
+        <ProtectedRoute adminOnly={false} path="/home" component={Home} />
+        <ProtectedRoute adminOnly={false} path="/my-bookings" component={MyCourses}  />
         <Redirect to="/login" />
       </Switch>
     </>

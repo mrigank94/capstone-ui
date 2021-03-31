@@ -1,44 +1,26 @@
+import { Box, Typography } from "@material-ui/core";
 import { useEffect, useState } from "react";
 import courseService from "../service/course.service";
 import CourseCard from "./common/CourseCard";
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 const Home = (props) => {
-  const [courses, setCourses] = useState([]);
-  const [filterText, setFilterText] = useState("");
-
-  useEffect(() => {
-    async function getAllCourses() {
-      try {
-        const { data } = await courseService.getAllCourses();
-        console.log(courses);
-        setCourses(data);
-      } catch (ex) {
-        console.log(ex.response);
-      }
-    }
-
-    getAllCourses();
-  }, []);
+  
+  const handleClick = () => {
+    props.history.push('/add-booking');
+  }
 
   return (
-    <>
-      <input
-        type="text"
-        name="fliter"
-        value={filterText}
-        onChange={(event) => setFilterText(event.target.value)}
-      />
-      <div style={{ display: "flex" }}>
-        {courses
-          .filter((course) =>
-            course.name.toLowerCase().includes(filterText.toLowerCase())
-          )
-          .map((course) => (
-            <CourseCard title={course.name} onDetailsClick={() => props.history.push(`/course-details/${course._id}`)}/>
-          ))}
+    <Box display='flex' flexDirection='column' height='80vh' justifyContent='center' alignItems='center'>
+      <Typography variant='h5'>
+        Self drive vehicle rental in Mumbai
+      </Typography>
+      <div className='book-vehicle-container' onClick={handleClick}>
+          <p>Book Now</p>
+          <ArrowForwardIcon/>
       </div>
-    </>
-  );
+    </Box>
+  )
 };
 
 export default Home;

@@ -46,7 +46,7 @@ export default function Login(props) {
 
   useEffect(() => {
       if(authService.isLoggedIn()) {
-        props.history.push('/my-courses');
+        props.history.push('/my-bookings');
       }
   }, []);
 

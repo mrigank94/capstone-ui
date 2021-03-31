@@ -33,7 +33,7 @@ export default function ButtonAppBar() {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h5" className={classes.title}>
-            MENTOS
+            HireWheels
           </Typography>
           {!authService.isLoggedIn() && (
             <>
@@ -45,13 +45,16 @@ export default function ButtonAppBar() {
               </NavLink>
             </>
           )}
-          <NavLink className={classes.link} to="/all-courses">
-            Home
-          </NavLink>
           {authService.isLoggedIn() && (
             <>
-              <NavLink className={classes.link} to="/my-courses">
-                My courses
+              <NavLink className={classes.link} to="/home">
+                Home
+              </NavLink>
+              <NavLink className={classes.link} to="/add-booking">
+                Book a Vehicle
+              </NavLink>
+              <NavLink className={classes.link} to="/my-bookings">
+                My Bookings
               </NavLink>
               <NavLink className={classes.link} to="/profile">
                 Profile
@@ -60,17 +63,14 @@ export default function ButtonAppBar() {
           )}
           {authService.isLoggedIn() && authService.isAdmin() && (
             <>
-              <NavLink className={classes.link} to="/add-course">
-                Add Course
-              </NavLink>
-              <NavLink className={classes.link} to="/add-mentor-details">
-                Add Mentor Details
+              <NavLink className={classes.link} to="/add-vehicle">
+                Add Vehicle
               </NavLink>
             </>
           )}
 
           {authService.isLoggedIn() && (
-            <Button onClick={authService.doLogout}>Logout</Button>
+            <Button variant='contained' color='secondary' onClick={authService.doLogout}>Logout</Button>
           )}
         </Toolbar>
       </AppBar>
