@@ -38,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login(props) {
+
   const classes = useStyles();
 
   const [password, setPassword] = React.useState("");
@@ -46,7 +47,8 @@ export default function Login(props) {
 
   useEffect(() => {
       if(authService.isLoggedIn()) {
-        props.history.push('/my-bookings');
+        console.log(authService.isLoggedIn())
+        props.history.push('/products');
       }
   }, []);
 
@@ -58,11 +60,11 @@ export default function Login(props) {
 
         try {
             let {data} = await authService.doAuth(email, password);
-            toast.success(`Welcome back, ${data.name}`);
+            console.log('here');
             props.history.push('/home');
             window.location.reload();
         } catch(ex) {
-            
+            toast.error(ex.response.data)
         } finally {
             setSubmitAction(false);
         }
@@ -113,10 +115,6 @@ export default function Login(props) {
             autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
-          />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
           />
           <Button
             type="submit"

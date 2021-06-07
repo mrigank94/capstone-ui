@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import Select from "react-select";
-import xhrService from "../service/xhr.service";
+import CreatableSelect from "react-select/creatable";
+import http from "../service/http.service";
+import productService from "../service/product.service";
 
-const SelectCategory = ({ type, value, onChange }) => {
+const SelectCategory = ({ value, onChange }) => {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     async function getCategories() {
       try {
-        const { data } = await xhrService.get(
-          `http://localhost:3001/api/categories/${type}`
-        );
+        const { data } = await productService.getAllCategories();
         setCategories(data.map((el) => ({ value: el, label: el })));
       } catch (ex) {
         console.log(ex);
@@ -18,18 +17,20 @@ const SelectCategory = ({ type, value, onChange }) => {
     }
 
     getCategories();
-  }, [type]);
+  }, []);
 
   return (
-    <>
-      <label>Select Category</label>
-      <Select
-        value={value}
-        onChange={onChange}
-        options={categories}
-        label="Select Category"
-      />
-    </>
+    <CreatableSelect
+      styles={{
+        // Fixes the overlapping problem of the component
+        control: (provided) => ({...provided, backgroundColor: 'none'}),
+        menu: (provided) => ({ ...provided, zIndex: 9999 }),
+      }}
+      value={value}
+      onChange={onChange}
+      options={categories}
+      placeholder="Select or add category..."
+    />
   );
 };
 

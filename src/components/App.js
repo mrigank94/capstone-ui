@@ -1,19 +1,19 @@
 import "./../App.css";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { ToastContainer } from "react-toastify";
 import Home from "./Home";
 import Login from "./Login";
 import SignUp from "./SignUp";
 import { Route, Redirect, Switch } from "react-router-dom";
 import AppBar from "./AppBar";
-import AddCourseForm from "./AddVehicleForm";
 import "react-toastify/dist/ReactToastify.css";
-import MyCourses from "./MyCourses";
 import ProtectedRoute from "./common/ProtectedRoute";
-import AddBooking from "./AddBookings";
+import AddProductForm from "./AddProduct";
+import EditProductForm from "./EditProduct";
+import CreateOrder from "./CreateOrder";
 
+function App() {
 
-function App(props) {
   return (
     <>
       <ToastContainer />
@@ -21,10 +21,10 @@ function App(props) {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/signup" component={SignUp} />
-        <ProtectedRoute adminOnly={true} path="/add-vehicle" component={AddCourseForm}  />
-        <ProtectedRoute adminOnly={false} path="/add-booking" component={AddBooking}  />
-        <ProtectedRoute adminOnly={false} path="/home" component={Home} />
-        <ProtectedRoute adminOnly={false} path="/my-bookings" component={MyCourses}  />
+        <ProtectedRoute adminOnly={true} path="/add-product" component={AddProductForm}  />
+        <ProtectedRoute adminOnly={true} path="/modify-product/:id" component={EditProductForm}  />
+        <ProtectedRoute adminOnly={false} path="/order/:id/:quantity" component={CreateOrder}  />
+        <ProtectedRoute adminOnly={false} path="/" component={Home} />
         <Redirect to="/login" />
       </Switch>
     </>

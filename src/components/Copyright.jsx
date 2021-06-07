@@ -6,7 +6,7 @@ export default function Copyright() {
       <Typography variant="body2" color="textSecondary" align="center">
         {'Copyright © '}
         <Link color="inherit" href="https://www.upgrad.com/">
-          Upgrad SpringWorks Batch
+          upGrad
         </Link>{' '}
         {new Date().getFullYear()}
         {'.'}

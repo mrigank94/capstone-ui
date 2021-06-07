@@ -1,26 +1,27 @@
-import { Box, Typography } from "@material-ui/core";
-import { useEffect, useState } from "react";
-import courseService from "../service/course.service";
-import CourseCard from "./common/CourseCard";
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-
+import { Box } from "@material-ui/core";
+import { Route, Switch } from "react-router";
+import authService from "../service/auth.service";
+import ToggleButtons from "./common/ToggleFilters";
+import ProductDetails from "./ProductDetails";
+import ProductList from "./ProductList";
 const Home = (props) => {
-  
-  const handleClick = () => {
-    props.history.push('/add-booking');
+
+  if (!authService.isLoggedIn()) {
+    props.history.push("/login");
+    return;
   }
 
   return (
-    <Box display='flex' flexDirection='column' height='80vh' justifyContent='center' alignItems='center'>
-      <Typography variant='h5'>
-        Self drive vehicle rental in Mumbai
-      </Typography>
-      <div className='book-vehicle-container' onClick={handleClick}>
-          <p>Book Now</p>
-          <ArrowForwardIcon/>
-      </div>
-    </Box>
-  )
+    <>
+      <Box mt={2} display="flex" justifyContent="center">
+        <ToggleButtons />
+      </Box>
+      <Switch>
+        <Route path="/products" component={ProductList} />
+        <Route path="/product-details/:id" component={ProductDetails} />
+      </Switch>
+    </>
+  );
 };
 
 export default Home;

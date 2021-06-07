@@ -1,36 +1,36 @@
-import React, { useEffect } from 'react';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import {Link} from 'react-router-dom';
-import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import Container from '@material-ui/core/Container';
-import axios from 'axios';
-import Copyright from './Copyright';
-import { FormLabel, Radio, RadioGroup } from '@material-ui/core';
-import { toast } from 'react-toastify';
-import xhrService from '../service/xhr.service';
+import React, { useEffect } from "react";
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import { Link } from "react-router-dom";
+import Grid from "@material-ui/core/Grid";
+import Box from "@material-ui/core/Box";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import axios from "axios";
+import Copyright from "./Copyright";
+import { FormLabel, Radio, RadioGroup } from "@material-ui/core";
+import { toast } from "react-toastify";
+import xhrService from "../service/http.service";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
     backgroundColor: theme.palette.secondary.main,
   },
   form: {
-    width: '100%', // Fix IE 11 issue.
+    width: "100%", // Fix IE 11 issue.
     marginTop: theme.spacing(3),
   },
   submit: {
@@ -41,46 +41,52 @@ const useStyles = makeStyles((theme) => ({
 export default function SignUp(props) {
   const classes = useStyles();
 
-  const [persona, setPersona] = React.useState('mentee');
-  const [name, setName] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [number, setNumber] = React.useState('');
-  const [email, setEmail] = React.useState('');
+  const [firstName, setFirstname] = React.useState("");
+  const [lastName, setLastname] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [password2, setPassword2] = React.useState("");
+  const [number, setNumber] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [submitAction, setSubmitAction] = React.useState(false);
 
   useEffect(() => {
     async function register() {
-        if(!submitAction)  {
-            return;
-        }
+      if (!submitAction) {
+        return;
+      }
 
-        let data = {};
-        try {
-            ({data} = await xhrService.post('http://localhost:3001/api/users', {
-                name,
-                email,
-                password,
-                persona,
-                contactNumber:  number
-            }));
-            toast.success(`User Signed Up, ${data.name}`)
-            props.history.push('/login');
-        } catch(ex) {
-            toast.error(ex.message);
-        } finally {
-            setSubmitAction(false);
-        }
-    
+      if (password !== password2) {
+        toast.error("Passwords do not match!");
+        return;
+      }
+      let data = {};
+      try {
+        ({ data } = await xhrService.post(
+          "http://localhost:3001/api/v1/users",
+          {
+            firstName,
+            lastName,
+            email,
+            password,
+            contactNumber: number,
+          }
+        ));
+        toast.success(`Signed Up Successfully!`);
+        props.history.push("/login");
+      } catch (ex) {
+        toast.error(ex.response.data);
+      } finally {
+        setSubmitAction(false);
+      }
     }
 
-    register()
-    
+    register();
   }, [submitAction]);
 
   const submitForm = (event) => {
     event.preventDefault();
     setSubmitAction(true);
-  }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -98,12 +104,25 @@ export default function SignUp(props) {
                 variant="outlined"
                 required
                 fullWidth
-                id="name"
-                label="Name"
-                name="name"
-                autoComplete="name"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                id="firstName"
+                label="First Name"
+                name="firstName"
+                autoComplete="firstName"
+                value={firstName}
+                onChange={(event) => setFirstname(event.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="outlined"
+                required
+                fullWidth
+                id="lastName"
+                label="Last Name"
+                name="lastName"
+                autoComplete="lastName"
+                value={lastName}
+                onChange={(event) => setLastname(event.target.value)}
               />
             </Grid>
             <Grid item xs={12}>
@@ -132,6 +151,18 @@ export default function SignUp(props) {
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
               />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                name="password2"
+                label="Confirm Password"
+                type="password"
+                id="password2"
+                value={password2}
+                onChange={(event) => setPassword2(event.target.value)}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -147,13 +178,6 @@ export default function SignUp(props) {
                 onChange={(event) => setNumber(event.target.value)}
               />
             </Grid>
-            <Grid item xs={12}>
-                <FormLabel component="persona">Persona</FormLabel>
-                <RadioGroup aria-label="persona" name="persona" value={persona} onChange={(event) => setPersona(event.target.value)}>
-                    <FormControlLabel value="mentor" control={<Radio />} label="Mentor" />
-                    <FormControlLabel value="mentee" control={<Radio />} label="Mentee" />
-                </RadioGroup>
-            </Grid>
           </Grid>
           <Button
             type="submit"
@@ -167,9 +191,7 @@ export default function SignUp(props) {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link to='/login'>
-                Already have an account? Sign in
-              </Link>
+              <Link to="/login">Already have an account? Sign in</Link>
             </Grid>
           </Grid>
         </form>
